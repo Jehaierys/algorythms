@@ -9,6 +9,7 @@ function changeThemeTo(theme) {
     const content = document.getElementById("content");
     switch (theme) {
         case "space":
+            clearContent();
             container.style.backgroundImage = 'url("space.jpg")';
 
             if (content.classList.contains('canyon')) {
@@ -22,9 +23,11 @@ function changeThemeTo(theme) {
             }
             break;
         case "canyon":
+            clearContent();
             container.style.backgroundImage = 'url("canyon.jpg")';
             break;
         case "forest":
+            clearContent();
             container.style.backgroundImage = 'url("forest.jpg")';
             const content = document.getElementById('content');
             content.insertAdjacentHTML('beforeend', `
@@ -47,7 +50,7 @@ function countFibonacciNumber() {
 
     let arg = parseInt(argInput.value);
 
-    if (isNaN(arg) || arg < 0 || arg > 70) {
+    if (isNaN(arg) || arg < 0 || arg > 90) {
         output.value = "Invalid input";
         return;
     }
