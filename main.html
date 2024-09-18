@@ -58,10 +58,6 @@
         width: 20vw;
     }
     .forest {
-        color: white;
-        font-size: 20px;
-        font-style: italic;
-        font-family: Gerogia, serif ;
     }
     .space {
         font-size: 16px;
@@ -84,8 +80,8 @@
         left: 41vw;
     }
     #orderButton {
-        margin-top: 20px;
-        margin-bottom: 10px;
+        margin-top: 30px;
+        margin-bottom: 15px;
         margin-left: 16%;
         height: 30px;
         text-align: center;
@@ -111,20 +107,22 @@
         width: 100%;
     }
     label {
+        width: 100%;
+        text-align: center;
         display: block;
-        font-family: sans-serif;
     }
     input {
+        height: 33px;
+        display: block;
+        width: 100%;
         border: 2px solid darkorchid; /* Darkorchid border */
         background-color: transparent; /* Transparent background */
         color: darkorchid; /* Darkorchid text color */
-        padding: 8px; /* Padding inside the input field */
         border-radius: 4px; /* Rounded corners */
         font-size: 16px; /* Font size */
         outline: none; /* Remove default focus outline */
+        margin-bottom: 3%;
     }
-
-    /* Style specifically for disabled inputs */
     input:disabled {
         color: darkorchid;               /* Light grey text color to indicate disabled state */
         border-color: darkorchid;       /* Light grey border for disabled state */
@@ -141,31 +139,23 @@
     input[type="number"] {
         -moz-appearance: textfield;
     }
-    form {
-        margin-top: 40px;
-        font-family: sans-serif;
-        font-size: 30px;
-        font-weight: bold;
-        color: darkorchid;
-    }
     #FibonacciButton {
          display: block;                  /* Makes the button a block-level element */
          background-color: transparent;  /* Transparent background */
-         font-family: sans-serif;         /* Uses a sans-serif font */
-         font-size: 30px;                 /* Font size of 30px */
-         font-weight: bold;               /* Bold text */
+         font-weight: 1000;
+         letter-spacing: 0px;
          text-align: center;
-         color: darkorchid;               /* Text color is darkorchid */
-         height: 48px;                    /* Height of 38px */
-         width: 130px;
+         color: darkorchid;
+         height: 48px;
+         width: 40%;
          border-radius: 24px;             /* Fully rounded corners with a radius of 19px */
-         margin-left: 65px;              /* Left margin of 100px */
-         margin-top: 30px;
-         border: 4px solid darkorchid;    /* Darkorchid border with a thickness of 3px */
-         cursor: pointer;                 /* Changes the cursor to a pointer on hover */
+         margin-left: 29%;
+         margin-top: 10%;
+         border: 5px solid darkorchid;
+         cursor: pointer;
          transition: background-color 0.3s, color 0.3s; /* Smooth transition for background color and text color */
+         font-size: inherit;
      }
-
     #FibonacciButton:hover {
         background-color: darkorchid;  /* Background color changes to darkorchid on hover */
         color: white;                  /* Text color changes to white on hover */
@@ -186,7 +176,7 @@
     <div id="content"></div>
 </div>
 
-<script src="lab1.js">
+<script src="script.js">
 </script>
 
 </body>

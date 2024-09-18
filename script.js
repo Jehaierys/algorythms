@@ -32,38 +32,72 @@ function changeThemeTo(theme) {
             const content = document.getElementById('content');
             content.insertAdjacentHTML('beforeend', `
             <form>
-            <label for="arg">Enter the argument</label>
+            <label for="arg">Enter argument</label>
             <input id="arg" type="number" placeholder="69">
             <label for="result">Result</label>
             <input id="result" type="text" placeholder="result" disabled>
             <button id="FibonacciButton" type="button" onclick="countFibonacciNumber()">Count!</button>
             </form>
             `);
+            prepareFormStyles();
+            window.addEventListener('resize', prepareFormStyles);
             break;
     }
+}
+
+function decorateInputFields(form) {
+    let inputsCollection = form.getElementsByTagName('input');
+    for (let i = 0; i < inputsCollection.length; ++i) {
+        inputsCollection.item(i).style.paddingLeft = '5px';
+    }
+}
+
+function prepareFormStyles() {                                        // For forest
+    let content = document.getElementById("content");
+    let form = content.getElementsByTagName("form").item(0);
+    let resultLabel = form.getElementsByTagName("label").item(1);
+
+    let windowHeight = window.innerHeight;
+    let windowWidth = window.innerWidth;
+
+    decorateInputFields(form);
+
+    form.style.fontSize = `${5 + windowWidth * 0.012}px`;
+    form.style.fontFamily = 'sans-serif';
+    form.style.display = 'block';
+    form.style.position = 'fixed';
+    form.style.top = `${windowHeight * 0.2}px`;
+    form.style.left = `${windowWidth * 0.4}px`;
+    form.style.width = `${windowWidth * 0.2}px`;
+    form.style.height = `${windowHeight * 0.3}px`;
+    form.style.fontFamily = "sans-serif";
+    form.style.fontWeight = 'bold';
+    form.style.color = 'darkorchid';
+
+    resultLabel.style.marginTop = "5%";
 }
 
 function countFibonacciNumber() {
     let argInput = document.getElementById("arg");
     let output = document.getElementById("result");
-    let previousNumber = 1, currentNumber = 2, keeper = 2;
+    let previousNumber = BigInt("1"), currentNumber = BigInt("1"), keeper = BigInt("1");
 
     let arg = parseInt(argInput.value);
 
-    if (isNaN(arg) || arg < 0 || arg > 90) {
+    if (isNaN(arg) || arg < 1) {
         output.value = "Invalid input";
         return;
     }
-    if (arg === 0) {
+    if (arg === 1) {
         output.value = "0";
         return;
     }
-    if (arg === 2 || arg === 3) {
+    if (arg === 2|| arg === 3) {
         output.value = "1";
         return;
     }
 
-    arg -= 2;
+    arg -= 3;
 
     while (arg !== 0) {
         keeper = currentNumber;
@@ -88,7 +122,7 @@ function prepareRandomizedMap() {
     cacheSet.clear();
     let index = 55;
     while (cacheSet.size < 55) {
-        let value = Math.floor(Math.random() * 75) + 1;
+        let value = Math.floor(Math.random() * 75) + 1; // generates random int from 1 to 75
         if (!cacheSet.has(value)) {
             cacheSet.add(value);
             randomizedMap.set(cacheSet.size, value);
@@ -148,6 +182,7 @@ function pasteOrderButton() {
 }
 
 function clearContent() {
+    window.removeEventListener('resize', prepareFormStyles);
     let content = document.getElementById("content");
     let children = content.children;
     while (children.length > 0) {
@@ -155,8 +190,30 @@ function clearContent() {
     }
 }
 
-function orderRandomizedMap() {
+function swap(currentElem, previousElem) {
+    let mediator = randomizedMap.get(previousElem);
+    randomizedMap.set(previousElem, randomizedMap.get(currentElem));
+    randomizedMap.set(currentElem, mediator);
 
+    // todo: animate paragraphs
+}
+
+function sortPoem() {
+    let shouldWeMakeAnotherIteration = true;
+    while (shouldWeMakeAnotherIteration) {
+        shouldWeMakeAnotherIteration = false;
+        let currentElem = 2;
+        let previousElem = 1;
+        while (currentElem <= 75) {
+            if (randomizedMap.get(currentElem) < randomizedMap.get(previousElem)) {
+                shouldWeMakeAnotherIteration = true;
+                swap(currentElem, previousElem);
+                sleep(100);
+            }
+            ++currentElem;
+            ++previousElem;
+        }
+    }
 }
 
 function prepareLegalMap() {
