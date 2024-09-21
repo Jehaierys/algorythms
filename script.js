@@ -1,5 +1,7 @@
 let isReady = false;
 
+const poemRowHeight = 24;
+
 const mapForInteger = new Map();
 const randomizedMap = new Map();
 const cacheSet = new Set();
@@ -43,6 +45,10 @@ function changeThemeTo(theme) {
             window.addEventListener('resize', prepareFormStyles);
             break;
     }
+}
+
+function adaptStylesTo(theme) {
+
 }
 
 function decorateInputFields(form) {
@@ -134,20 +140,25 @@ function prepareRandomizedMap() {
             randomizedMap.set(++index, key);
         }
     }
+    cacheSet.clear();
 }
 
 async function displayRandomizedMap() {
     prepareRandomizedMap();
     clearContent();
     pasteOrderButton();
+    poemRows = document.getElementById("content").getElementsByTagName("p");
     let content = document.getElementById("content");
     let i = 1;
     while (i <= 75) {
         const child = document.createElement("p");
-        child.classList.add("row");
+        child.classList.add("poemRow");
         let value = mapForInteger.get(randomizedMap.get(i));
         if (value !== undefined) {
-            child.textContent = value;
+            child.setAttribute('id', `${i}`);
+            child.style.top = `${75 + poemRowHeight * (i - 1)}px`;
+            child.style.height = `${poemRowHeight}px`;
+            child.textContent = `${i + ' ' + value}`;
             content.appendChild(child);
         }
         i++;
@@ -156,15 +167,16 @@ async function displayRandomizedMap() {
 
 function displayLegalMap() {
     clearContent();
-    sleep(100);
     prepareLegalMap();
     let content = document.getElementById("content");
     let i = 1;
     while (i <= 75) {
         const child = document.createElement("p");
-        child.classList.add("row");
+        child.classList.add("poemRow");
         let value = mapForInteger.get(i);
         if (value !== undefined) {
+            child.style.top = `${75 + poemRowHeight * (i - 1)}px`;
+            child.style.height = `${poemRowHeight}px`;
             child.textContent = value;
             content.appendChild(child);
         }
@@ -177,8 +189,9 @@ function pasteOrderButton() {
     let button = document.createElement("button");
     button.textContent = "Order";
     button.setAttribute("id", "orderButton");
-    button.setAttribute("onclick", "orderRandomizedMap()");
+    button.setAttribute("onclick", "sortPoem()");
     content.appendChild(button);
+    button.addEventListener("onclick", sortPoem);
 }
 
 function clearContent() {
@@ -190,26 +203,53 @@ function clearContent() {
     }
 }
 
+let poemRows;
+let previousKeeper, currentKeeper;
+let a, b;
 function swap(currentElem, previousElem) {
-    let mediator = randomizedMap.get(previousElem);
-    randomizedMap.set(previousElem, randomizedMap.get(currentElem));
-    randomizedMap.set(currentElem, mediator);
+
+    previousKeeper = randomizedMap.get(previousElem);
+    currentKeeper = randomizedMap.get(currentElem);
+
+    randomizedMap.delete(previousElem);
+    randomizedMap.delete(currentElem);
+
+    randomizedMap.set(previousElem, currentKeeper);
+    randomizedMap.set(currentElem, previousKeeper);
+
+    a = document.getElementById(`${currentElem}`);
+    a.removeAttribute('id');
+    a.setAttribute('id', `${previousElem}`);
+    a.style.top = `${75 + (previousElem - 1) * poemRowHeight}px`;
+    b = document.getElementById(`${previousElem}`);
+    b.removeAttribute('id');
+    b.setAttribute('id', `${currentElem}`);
+    b.style.top = `${75 + (currentElem - 1) * poemRowHeight}px`;
+
+    //poemRows.item(currentElem - 1).style.top = `${75 + (previousElem - 1) * poemRowHeight}px`;
+    //poemRows.item(previousElem - 1).style.top = `${75 + (currentElem - 1) * poemRowHeight}px`;
 
     // todo: animate paragraphs
 }
 
-function sortPoem() {
+async function sortPoem() {
+
     let shouldWeMakeAnotherIteration = true;
+    let currentElem;
+    let previousElem;
+
     while (shouldWeMakeAnotherIteration) {
         shouldWeMakeAnotherIteration = false;
-        let currentElem = 2;
-        let previousElem = 1;
+        currentElem = 2;
+        previousElem = 1;
+
         while (currentElem <= 75) {
+            await sleep(30);
             if (randomizedMap.get(currentElem) < randomizedMap.get(previousElem)) {
                 shouldWeMakeAnotherIteration = true;
                 swap(currentElem, previousElem);
-                sleep(100);
             }
+
             ++currentElem;
             ++previousElem;
         }
