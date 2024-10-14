@@ -27,6 +27,8 @@ function changeThemeTo(theme) {
         case "canyon":
             clearContent();
             container.style.backgroundImage = 'url("canyon.jpg")';
+            createFormForCanyon();
+            prepareCanyonFormStyle();
             break;
         case "forest":
             clearContent();
@@ -45,10 +47,6 @@ function changeThemeTo(theme) {
             window.addEventListener('resize', prepareFormStyles);
             break;
     }
-}
-
-function adaptStylesTo(theme) {
-
 }
 
 function decorateInputFields(form) {
@@ -244,7 +242,7 @@ async function sortPoem() {
         previousElem = 1;
 
         while (currentElem <= 75) {
-            await sleep(30);
+            await sleep(3);
             if (randomizedMap.get(currentElem) < randomizedMap.get(previousElem)) {
                 shouldWeMakeAnotherIteration = true;
                 swap(currentElem, previousElem);
