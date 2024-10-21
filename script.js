@@ -55,12 +55,14 @@ function prepareCanyonContent() {
     <buttom onclick="doLaunchTuringMachine()">Go!</buttom>
     `);
 }
+
 function doLaunchTuringMachine() {
     const input = getInputForTuringMachine();
     if (!isValid(input)) { return; }
     clearContent();
     const output = computeBinaryNumber(input);
     displayMachineFragments(input, output);
+    fillTableForMachine(input, output);
 }
 
 function displayMachineFragments(input, binaryNumber) {
@@ -75,132 +77,134 @@ function displayMachineFragments(input, binaryNumber) {
     <div id="canyonTable"></div>
     `);
 
-    displayLentForTuring(binaryNumber);
+    displayLentForTuring(input);
     displayCanyonPanel(input, binaryNumber);
-
-    const table = document.getElementById('canyonTable');
-
-    table.insertAdjacentHTML('beforeend', `
-<table id="canyonTable">
-    <thead>
-    <tr>
-        <th>Case</th>
-        <th>q1</th>
-        <th>q2</th>
-        <th>q3</th>
-        <th>q4</th>
-        <th>q5</th>
-        <th>q6</th>
-        <th>q7</th>
-        <th>q8</th>
-        <th>q9</th>
-        <th>q10</th>
-        <th>q11</th>
-        <th>q12</th>
-        <th>q13</th>
-        <th>q14</th>
-        <th>q15</th>
-        <th>q16</th>
-        <th>q17</th>
-        <th>q18</th>
-        <th>q19</th>
-        <th>q20</th>
-        <th>q21</th>
-        <th>q22</th>
-        <th>q23</th>
-        <th>q24</th>
-        <th>q25</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>1</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>0</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>-</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
-    `);
+    displayCanyonTable();
 }
+
+function fillTableForMachine(input, output) {
+    const emptyRow = document.getElementById('emptyRow');
+    const zeroRow = document.getElementById('zeroRow');
+    const oneRow = document.getElementById('oneRow');
+    const twoRow = document.getElementById('twoRow');
+    const threeRow = document.getElementById('threeRow');
+
+    for (let i = 1; i <= 20; ++i) { // fill the table with empty symbols
+        threeRow.children[i].textContent = 'X';
+        twoRow.children[i].textContent = 'X';
+        oneRow.children[i].textContent = 'X';
+        zeroRow.children[i].textContent = 'X';
+        emptyRow.children[i].textContent = 'X';
+    }
+
+    for (let i = 0; i < input.length; ++i) { // fill the first input.length - 1 elements
+        switch (input[i]) {
+            case '0':
+                zeroRow.children[i + 1].textContent = `X>q${i + 2}`;
+                break;
+            case '1':
+                oneRow.children[i + 1].textContent = `X>q${i + 2}`;
+                break;
+            case '2':
+                twoRow.children[i + 1].textContent = `X>q${i + 2}`;
+                break;
+            case '3':
+                threeRow.children[i + 1].textContent = `X>q${i + 2}`;
+                break;
+        }
+    }
+
+    for (let i = input.length; i < input.length + output.length - 1; ++i) {
+        emptyRow.children[i + 1].textContent = `${output[i - input.length]}>q${i + 2}`;
+    }
+
+    const lastCellIndex = input.length + output.length;
+    switch (output[output.length - 1]) {
+        case '0':
+            emptyRow.children[lastCellIndex].textContent = `0=q${lastCellIndex}`;
+            zeroRow.children[lastCellIndex].textContent = `0=q${lastCellIndex}`;
+            break;
+        case '1':
+            emptyRow.children[lastCellIndex].textContent = `1=q${lastCellIndex}`;
+            oneRow.children[lastCellIndex].textContent = `1=q${lastCellIndex}`;
+            break;
+    }
+}
+
+async function launch() {
+    const emptyRow = document.getElementById('emptyRow');
+    const zeroRow = document.getElementById('zeroRow');
+    const oneRow = document.getElementById('oneRow');
+    const twoRow = document.getElementById('twoRow');
+    const threeRow = document.getElementById('threeRow');
+
+    let q = 1;
+    let currentCell = document.getElementById('cell_1');
+    currentCell.style.backgroundColor = 'red';
+    let cell_index = 1;
+    let value = currentCell.textContent;
+
+    await sleep(2000);
+    let i = 0;
+    do {
+        currentCell.style.backgroundColor = 'darkorchid';
+        currentCell = document.getElementById(`cell_${cell_index}`);
+        currentCell.style.backgroundColor = 'red';
+        value = currentCell.textContent;
+        //alert('q = ' + q + ' value = ' + value + ' cell index = ' + cell_index);
+        switch (value) {
+            case 'X':
+                currentCell.textContent = emptyRow.children[q].textContent[0];
+                if (emptyRow.children[q].textContent[1] === '>') {
+                    ++cell_index;
+                } else if (emptyRow.children[q].textContent[1] === '<') {
+                    --cell_index;
+                }
+                q =  parseInt(emptyRow.children[q].textContent[3]);
+                break;
+            case '0':
+                currentCell.textContent = zeroRow.children[q].textContent[0];
+                if (zeroRow.children[q].textContent[1] === '>') {
+                    ++cell_index;
+                } else if (zeroRow.children[q].textContent[1] === '<') {
+                    --cell_index;
+                }
+                q =  parseInt(zeroRow.children[q].textContent[3]);
+                break;
+            case '1':
+                currentCell.textContent = oneRow.children[q].textContent[0];
+                if (oneRow.children[q].textContent[1] === '>') {
+                    ++cell_index;
+                } else if (oneRow.children[q].textContent[1] === '<') {
+                    --cell_index;
+                }
+                q =  parseInt(oneRow.children[q].textContent[3]);
+                break;
+            case '2':
+                currentCell.textContent = twoRow.children[q].textContent[0];
+                if (twoRow.children[q].textContent[1] === '>') {
+                    ++cell_index;
+                } else if (twoRow.children[q].textContent[1] === '<') {
+                    --cell_index;
+                }
+                q =  parseInt(twoRow.children[q].textContent[3]);
+                break;
+            case '3':
+                currentCell.textContent = threeRow.children[q].textContent[0];
+                if (threeRow.children[q].textContent[1] === '>') {
+                    ++cell_index;
+                } else if (threeRow.children[q].textContent[1] === '<') {
+                    --cell_index;
+                }
+                q =  parseInt(threeRow.children[q].textContent[3]);
+                break;
+        }
+        ++i;
+        await sleep(1000);
+    } while (i < 100);
+    alert('goodbye');
+}
+
 function displayCanyonPanel(input, binaryNumber) {
     const panel = document.getElementById('canyonPanel');
 
@@ -209,9 +213,10 @@ function displayCanyonPanel(input, binaryNumber) {
     <p>${input}</p><br>
     <p>Expected:</p>
     <p>${binaryNumber}</p>
+    <button onclick="launch()"><p>Launch</p></button>
     `);
 }
-function displayLentForTuring(binaryNumber) {
+function displayLentForTuring(input) {
     const lent = document.getElementById('lent');
 
     const lentTable = document.createElement('table');
@@ -244,8 +249,10 @@ function displayLentForTuring(binaryNumber) {
         cell = document.createElement('td');
         cell.setAttribute('class', 'lentTd');
         cell.setAttribute('id', `cell_${countCell}`);
-        if (i < binaryNumber.length) {
-            cell.textContent = binaryNumber.charAt(i);
+        if (i < input.length) {
+            cell.textContent = input.charAt(i);
+        } else {
+            cell.textContent = 'X';
         }
         bodyRow.appendChild(cell);
     }
@@ -263,12 +270,10 @@ function toDecimal(input) {
     for (let i = 0; i < input.length; ++i) {
         decimal += Math.pow(4, input.length - i - 1) * parseInt(input[i]);
     }
-    //alert('decimal = ' + decimal + ' -- length = ' + input.length);
     return decimal;
 }
 
 function isValid(input) {
-
     const set = new Set();
     set.add('0');
     set.add('1');
@@ -295,6 +300,157 @@ function isValid(input) {
 function getInputForTuringMachine() {
     let input = document.getElementById('inputForTuring');
     return input.value;
+}
+function displayCanyonTable() {
+
+    const table = document.getElementById('canyonTable');
+
+    table.insertAdjacentHTML('beforeend', `
+<table id="canyonTable">
+    <thead>
+    <tr>
+        <th>Case</th>
+        <th>q1</th>
+        <th>q2</th>
+        <th>q3</th>
+        <th>q4</th>
+        <th>q5</th>
+        <th>q6</th>
+        <th>q7</th>
+        <th>q8</th>
+        <th>q9</th>
+        <th>q10</th>
+        <th>q11</th>
+        <th>q12</th>
+        <th>q13</th>
+        <th>q14</th>
+        <th>q15</th>
+        <th>q16</th>
+        <th>q17</th>
+        <th>q18</th>
+        <th>q19</th>
+        <th>q20</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr id="emptyRow">
+        <td>-</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr id="zeroRow">
+        <td>0</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr id="oneRow">
+        <td>1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr id="twoRow">
+        <td>2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr id="threeRow">
+        <td>3</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+    `);
 }
 
 function decorateInputFields(form) {
