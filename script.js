@@ -27,8 +27,7 @@ function changeThemeTo(theme) {
         case "canyon":
             clearContent();
             container.style.backgroundImage = 'url("canyon.jpg")';
-            createFormForCanyon();
-            prepareCanyonFormStyle();
+            prepareCanyonContent();
             break;
         case "forest":
             clearContent();
@@ -47,6 +46,255 @@ function changeThemeTo(theme) {
             window.addEventListener('resize', prepareFormStyles);
             break;
     }
+}
+function prepareCanyonContent() {
+    let content = document.getElementById('content');
+    content.insertAdjacentHTML('beforeend',  `
+    <p>Enter your number:</p>
+    <input type="number" placeholder="321" id="inputForTuring">
+    <buttom onclick="doLaunchTuringMachine()">Go!</buttom>
+    `);
+}
+function doLaunchTuringMachine() {
+    const input = getInputForTuringMachine();
+    if (!isValid(input)) { return; }
+    clearContent();
+    const output = computeBinaryNumber(input);
+    displayMachineFragments(input, output);
+}
+
+function displayMachineFragments(input, binaryNumber) {
+    let content = document.getElementById('content');
+
+    content.style.width = '80%';
+    content.style.left = '10vw';
+
+    content.insertAdjacentHTML('beforeend', `
+    <div id="canyonPanel"></div>
+    <div id="lent"></div>
+    <div id="canyonTable"></div>
+    `);
+
+    displayLentForTuring(binaryNumber);
+    displayCanyonPanel(input, binaryNumber);
+
+    const table = document.getElementById('canyonTable');
+
+    table.insertAdjacentHTML('beforeend', `
+<table id="canyonTable">
+    <thead>
+    <tr>
+        <th>Case</th>
+        <th>q1</th>
+        <th>q2</th>
+        <th>q3</th>
+        <th>q4</th>
+        <th>q5</th>
+        <th>q6</th>
+        <th>q7</th>
+        <th>q8</th>
+        <th>q9</th>
+        <th>q10</th>
+        <th>q11</th>
+        <th>q12</th>
+        <th>q13</th>
+        <th>q14</th>
+        <th>q15</th>
+        <th>q16</th>
+        <th>q17</th>
+        <th>q18</th>
+        <th>q19</th>
+        <th>q20</th>
+        <th>q21</th>
+        <th>q22</th>
+        <th>q23</th>
+        <th>q24</th>
+        <th>q25</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>0</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>-</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+    `);
+}
+function displayCanyonPanel(input, binaryNumber) {
+    const panel = document.getElementById('canyonPanel');
+
+    panel.insertAdjacentHTML('beforeend', `
+    <p>Input:</p>
+    <p>${input}</p><br>
+    <p>Expected:</p>
+    <p>${binaryNumber}</p>
+    `);
+}
+function displayLentForTuring(binaryNumber) {
+    const lent = document.getElementById('lent');
+
+    const lentTable = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('body');
+
+    lentTable.setAttribute('id', 'lentTable');
+    thead.setAttribute('id', 'lentHead');
+    tbody.setAttribute('id', 'lentBody');
+
+    lent.appendChild(lentTable);
+    lentTable.appendChild(thead);
+    lentTable.appendChild(tbody);
+
+    let headRow = document.createElement('tr');
+    let bodyRow = document.createElement('tr');
+
+    thead.appendChild(headRow);
+    tbody.appendChild(bodyRow);
+
+    let cell;
+    let countCell;
+    for (let i = 0; i < 30; ++i) {
+        cell = document.createElement('th');
+        cell.setAttribute('class', 'lentTh');
+        countCell = i + 1;
+        cell.textContent = countCell.toString();
+        headRow.appendChild(cell);
+
+        cell = document.createElement('td');
+        cell.setAttribute('class', 'lentTd');
+        cell.setAttribute('id', `cell_${countCell}`);
+        if (i < binaryNumber.length) {
+            cell.textContent = binaryNumber.charAt(i);
+        }
+        bodyRow.appendChild(cell);
+    }
+    lent.style.marginTop = '100px';
+    lent.style.marginBottom = '70px';
+}
+
+function computeBinaryNumber(input) {
+    return toDecimal(input).toString(2);
+}
+
+function toDecimal(input) {
+    input.toString();
+    let decimal = 0;
+    for (let i = 0; i < input.length; ++i) {
+        decimal += Math.pow(4, input.length - i - 1) * parseInt(input[i]);
+    }
+    //alert('decimal = ' + decimal + ' -- length = ' + input.length);
+    return decimal;
+}
+
+function isValid(input) {
+
+    const set = new Set();
+    set.add('0');
+    set.add('1');
+    set.add('2');
+    set.add('3');
+
+    for (let i = 0; i < input.length; ++i) {
+        if (!set.has(input.charAt(i))) {
+            alert('invalid input: ' + input[i]);
+            return false;
+        }
+    }
+    if (toDecimal(input) > 25) {
+        alert('too big');
+        return false;
+    }
+    input = input.toString();
+    if (input[0] === '0') {
+        alert(`incompatible first char '${input[0]}'`);
+        return false
+    }
+    return true;
+}
+function getInputForTuringMachine() {
+    let input = document.getElementById('inputForTuring');
+    return input.value;
 }
 
 function decorateInputFields(form) {
